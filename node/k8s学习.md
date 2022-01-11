@@ -268,7 +268,7 @@ spec:
 
 #### 2.利用k8s暴露nginx服务
 
-![k8s外网访问集群内pod服务](C:\Users\Administrator\Desktop\workspace\infrastructure-code\k8s外网访问集群内pod服务.png)
+![k8s外网访问集群内pod服务](F:\operation\workspace\infrastructure-code\study\node\k8s外网访问集群内pod服务.png)
 
 ```yaml
 apiVersion: apps/v1   
@@ -369,7 +369,7 @@ curl  svc-name.namespace-name 去测试
 
 #### 3.利用configmap替换环境变量以及存储在数据卷内
 
-![configmap](C:\Users\Administrator\Desktop\workspace\infrastructure-code\configmap.png)
+![configmap](F:\operation\workspace\infrastructure-code\study\node\configmap.png)
 
 
 
@@ -439,7 +439,7 @@ spec:
 
 #### 4.创建PVC大小5G，权限为ReadWriteMany，名叫nginx-pvc，绑定一个nginx的pod。并挂载到Pod里面的/var/www目录
 
-![pvc](C:\Users\Administrator\Desktop\workspace\infrastructure-code\pvc.png)
+![pvc](F:\operation\workspace\infrastructure-code\study\node\pvc.png)
 
 ```yaml
 apiVersion: v1
@@ -532,7 +532,7 @@ metadata:
   name: nginx-index-v1
 data:
   index.html: |
-  <pre> myapp|version:V1 </pre>
+  <pre> myapp：version:V1 </pre>
 ---
 apiVersion: apps/v1   
 kind: Deployment    
@@ -584,9 +584,7 @@ spec:
   selector:
     app: nginx-test
     version: 1.16.1
-  type: ClusterIP
-status:
-  loadBalancer: {}
+  type: loadBalancer
 ---
 apiVersion: extensions/v1beta1      
 kind: Ingress
@@ -615,7 +613,7 @@ metadata:
   name: nginx-index-v2
 data:
   index.html: |
-  <pre> myapp|version:V2 </pre>
+  <pre> myapp：version:V2 </pre>
 ```
 
 ```yaml
@@ -717,4 +715,19 @@ spec:
   type: LoadBalancer
 
 ```
+
+# 四、日常笔记
+
+**什么是serviceaccount**
+
+Service account是为了方便Pod里面的进程调用Kubernetes API或其他外部服务而设计的。它与User account不同
+　　1.User account是为人设计的，而service account则是为Pod中的进程调用Kubernetes API而设计；
+　　2.User account是跨namespace的，而service account则是仅局限它所在的namespace；
+　　3.每个namespace都会自动创建一个default service account
+　　4.Token controller检测service account的创建，并为它们创建secret
+　　5.开启ServiceAccount Admission Controller后
+               a.每个Pod在创建后都会自动设置spec.serviceAccount为default（除非指定了其他ServiceAccout）
+　　　　b.验证Pod引用的service account已经存在，否则拒绝创建
+　　　　c.如果Pod没有指定ImagePullSecrets，则把service account的ImagePullSecrets加到Pod中
+　　　　d.每个container启动后都会挂载该service account的token和ca.crt到/var/run/secrets/kubernetes.io/serviceaccount/
 
