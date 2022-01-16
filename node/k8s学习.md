@@ -731,3 +731,14 @@ Service account是为了方便Pod里面的进程调用Kubernetes API或其他外
 　　　　c.如果Pod没有指定ImagePullSecrets，则把service account的ImagePullSecrets加到Pod中
 　　　　d.每个container启动后都会挂载该service account的token和ca.crt到/var/run/secrets/kubernetes.io/serviceaccount/
 
+---
+
+```bash
+#!/bin/bash
+curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+mkdir ~/.kube
+touch config
+```
+
