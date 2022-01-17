@@ -71,7 +71,7 @@ metadata:
 
 url就是你的git repo 地址  branch就是你的git 分支名字
 
-GitRepository就是一种监听git repo的资源，让flux去拉代码
+GitRepository就是一种监听git repo的资源，让flux去拉yaml文件
 
 ```yaml
 apiVersion: source.toolkit.fluxcd.io/v1beta1
@@ -83,7 +83,7 @@ spec:
   interval: 1m
   url: https://github.com/JaneLiuL/testdata
   ref:
-    branch: main
+    branch: main   #监听仓库下main分支
   secretRef:       #当仓库为私用仓库时，需要登录验证，采用secret
     name: https-credentials    
 ```
@@ -104,7 +104,7 @@ data:
 
 我们使用`kubectl get gitrepositories` 去测试一下是否拉代码成功
 
-接下来我们创建flux 的Kustomization 
+接下来我们创建flux 的Kustomization 服务，让该服务来apply拉下来的yaml文件
 
 ```yaml
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
